@@ -102,8 +102,9 @@ local function custom_validate_token_signature(conf, jwt, second_call)
   end
 
   -- Verify signatures
-  kong.log.debug('Aquiii:'..public_keys..' agora')
+  kong.log.debug('Aquiii:.. agora')
   for _, k in ipairs(public_keys.keys) do
+      kong.log.debug('Aquiii:'..k..'agora')
       if jwt:verify_signature(k) then
           kong.log.debug('JWT signature verified')
           return nil
