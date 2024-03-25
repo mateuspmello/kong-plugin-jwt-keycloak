@@ -93,7 +93,7 @@ local function custom_validate_token_signature(conf, jwt, second_call)
   local well_known_endpoint = keycloak_keys.get_wellknown_endpoint(conf.well_known_template, jwt.claims.iss)
   -- Retrieve public keys
   local public_keys, err = kong.cache:get(issuer_cache_key, nil, custom_helper_issuer_get_keys, well_known_endpoint, conf.cafile)
-
+  kong.log.debug(public_keys)
   if not public_keys then
       if err then
           kong.log.err(err)
