@@ -79,6 +79,19 @@ local function custom_helper_issuer_get_keys(well_known_endpoint, cafile)
   }
 end
 
+function dump(o)
+  if type(o) == 'table' then
+     local s = '{ '
+     for k,v in pairs(o) do
+        if type(k) ~= 'number' then k = '"'..k..'"' end
+        s = s .. '['..k..'] = ' .. dump(v) .. ','
+     end
+     return s .. '} '
+  else
+     return tostring(o)
+  end
+end
+
 -------------------------------------------------------------------------------
 -- custom keycloak specific extension for the plugin "jwt-keycloak"
 -- --> This is for one of the main benefits when using this plugin
@@ -93,7 +106,7 @@ local function custom_validate_token_signature(conf, jwt, second_call)
   local well_known_endpoint = keycloak_keys.get_wellknown_endpoint(conf.well_known_template, jwt.claims.iss)
   -- Retrieve public keys
   local public_keys, err = kong.cache:get(issuer_cache_key, nil, custom_helper_issuer_get_keys, well_known_endpoint, conf.cafile)
-  kong.log.debug(public_keys)
+  kong.log.debug(dump(public_keys))
   if not public_keys then
       if err then
           kong.log.err(err)
